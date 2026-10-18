@@ -1,0 +1,3 @@
+# Preserves the transport version from the original local bundle.
+# Actual compatibility with the installed WeChat client must be verified.
+wcferry==39.2.4.0

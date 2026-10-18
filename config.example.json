@@ -1,0 +1,15 @@
+{
+  "system_prompt": "你是我的个人助手。使用中文，回答清楚、简洁；无法确定的内容要说明。",
+  "max_history_turns": 20,
+  "max_message_chars": 12000,
+  "reply_chunk_chars": 1500,
+  "models": [
+    {
+      "name": "local",
+      "protocol": "ollama",
+      "endpoint": "http://127.0.0.1:11434/api/chat",
+      "model": "replace-with-your-installed-model",
+      "timeout_seconds": 120
+    }
+  ]
+}
