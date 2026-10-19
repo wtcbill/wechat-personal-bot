@@ -1,33 +1,8 @@
-# Local identity, endpoints and credentials
-config*.json
-!config.example.json
-.env
-.env.*
-!.env.example
-*.pem
-*.key
-*.p12
-*.pfx
+# Local scratch notes
+/.md
 
-# Runtime data and bundled environments
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-Dlab/
-logs/
-data/
-*.log
-*.db
-*.db-*
-*.sqlite*
-*.exe
-*.dll
-*.zip
-*.7z
-
-# Editors and test output
-.idea/
-.vscode/
-.coverage
-htmlcov/
+# Local credentials and configuration
+/.env
+/.env.*
+!/.env.example
+/config.local.json
