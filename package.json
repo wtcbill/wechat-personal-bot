@@ -1,0 +1,28 @@
+{
+  "name": "weave",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "packageManager": "npm@11.16.0",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test && npm run build",
+    "config:check": "node --disable-warning=ExperimentalWarning src/main.ts check",
+    "login": "node --disable-warning=ExperimentalWarning src/main.ts login",
+    "start": "node --disable-warning=ExperimentalWarning src/main.ts start"
+  },
+  "dependencies": {
+    "qrcode": "1.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "@types/qrcode": "1.5.6",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}

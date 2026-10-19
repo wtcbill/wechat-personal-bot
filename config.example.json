@@ -1,0 +1,4 @@
+{
+  "pollTimeoutMs": 35000,
+  "requestTimeoutMs": 15000
+}

@@ -6,3 +6,11 @@
 /.env.*
 !/.env.example
 /config.local.json
+
+# Dependencies, generated files, local login credentials and QR codes
+/node_modules/
+/dist/
+/.cache/
+/.weave/
+/coverage/
+*.tsbuildinfo
