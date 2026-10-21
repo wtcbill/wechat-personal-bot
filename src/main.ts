@@ -8,10 +8,10 @@
 import { createInterface } from "node:readline/promises";
 import { HelloApplication } from "./application.ts";
 import { DATA_DIRECTORY, loadConfig } from "./config.ts";
-import { IlinkError, safeError } from "./weixin/api.ts";
-import { WeixinChannel } from "./weixin/channel.ts";
-import { login } from "./weixin/login.ts";
-import { ChannelState } from "./weixin/state.ts";
+import { IlinkError, safeError } from "./weixin_ilink/api.ts";
+import { WeixinChannel } from "./weixin_ilink/channel.ts";
+import { login } from "./weixin_ilink/login.ts";
+import { ChannelState } from "./weixin_ilink/state.ts";
 
 const controller = new AbortController();
 for (const event of ["SIGINT", "SIGTERM"] as const) process.once(event, () => controller.abort());

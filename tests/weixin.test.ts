@@ -3,10 +3,10 @@ import { mkdir, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
 import { HelloApplication } from "../src/application.ts";
 import { PROJECT_ROOT } from "../src/config.ts";
-import { IlinkApi, IlinkError, safeError, validatedApiUrl } from "../src/weixin/api.ts";
-import { inboundText, WeixinChannel } from "../src/weixin/channel.ts";
-import { ChannelState, parseCredentials } from "../src/weixin/state.ts";
-import { login } from "../src/weixin/login.ts";
+import { IlinkApi, IlinkError, safeError, validatedApiUrl } from "../src/weixin_ilink/api.ts";
+import { inboundText, WeixinChannel } from "../src/weixin_ilink/channel.ts";
+import { ChannelState, parseCredentials } from "../src/weixin_ilink/state.ts";
+import { login } from "../src/weixin_ilink/login.ts";
 
 const signal = new AbortController().signal;
 const credentials = { token: "fake-local-token", botId: "bot", ownerId: "owner", baseUrl: "https://ilinkai.weixin.qq.com" };

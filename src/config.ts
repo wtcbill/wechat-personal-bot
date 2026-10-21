@@ -7,7 +7,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { isRecord } from "./weixin/api.ts";
+import { isRecord } from "./weixin_ilink/api.ts";
 
 export const PROJECT_ROOT = fileURLToPath(new URL("../", import.meta.url));
 export const DATA_DIRECTORY = fileURLToPath(new URL("../.weave/", import.meta.url));
