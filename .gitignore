@@ -6,6 +6,7 @@
 /.env.*
 !/.env.example
 /config.local.json
+/services.config.local.json
 
 # Dependencies, generated files, local login credentials and QR codes
 /node_modules/

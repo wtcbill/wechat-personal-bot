@@ -65,7 +65,7 @@ export class Research {
     return [...this.records.values()].map(({ body: _body, ...source }) => ({ ...source }));
   }
   evidence(): AnswerSource[] { return this.sources().filter(source => source.retrievedAt !== null && source.excerpt.trim() && ["summary", "read"].includes(source.status)); }
-  catalog(): string { return JSON.stringify(this.sources().map(({ id, url, title }) => ({ id, url, title, status: "unread" }))); }
+  catalog(): string { return JSON.stringify(this.sources().map(({ id, url, title, status }) => ({ id, url, title, status }))); }
   private save(hit: SearchHit): Source | undefined {
     const source = this.register(hit.url);
     if (!source) return undefined;

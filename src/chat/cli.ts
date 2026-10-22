@@ -1,7 +1,7 @@
 /**
  * L3 — Local chat composition and interactive verification entry.
  * Input: check/ask, process-only DeepSeek key/model and terminal questions.
- * Output: offline configuration status or answers with source links.
+ * Output: offline configuration status or compact formatted answers/limitations.
  * Pos: standalone chat bootstrap; see ./L2.md.
  * Effects/Dependencies: check is offline and does not read credentials; ask calls
  * DeepSeek after explicit invocation. No file writes, iLink or service routing.
@@ -12,6 +12,7 @@ import { pathToFileURL } from "node:url";
 import { DeepSeekClient } from "./deepseek.ts";
 import { ChatService } from "./service.ts";
 import { ChatError } from "./types.ts";
+import { formatReply } from "../reply.ts";
 import type { NetworkPolicy } from "../services.ts";
 
 export async function main(args: string[] = process.argv.slice(2)): Promise<void> {
@@ -36,9 +37,7 @@ export async function main(args: string[] = process.argv.slice(2)): Promise<void
   process.once("SIGTERM", stop);
   const ask = async (text: string): Promise<void> => {
     const result = await service.run({ sessionId, requestId: randomUUID(), text, network }, controller.signal);
-    console.log(`\n${result.answer}`);
-    for (const source of result.sources) console.log(`[${source.id}] ${source.title}\n${source.url}`);
-    for (const note of result.limitations) console.log(`限制：${note}`);
+    console.log(`\n${formatReply(result).join("\n")}`);
     console.log(`状态：${result.status}\n`);
   };
   try {

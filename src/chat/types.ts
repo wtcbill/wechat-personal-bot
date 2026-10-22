@@ -4,32 +4,7 @@
  * Pos: internal chat contracts; see ./L2.md.
  * Effects/Dependencies: none; ports accept cancellation, no channel dependencies.
  */
-export interface ToolCall {
-  id: string;
-  type: "function";
-  function: { name: string; arguments: string };
-}
-export type Message =
-  | { role: "system" | "user"; content: string }
-  | { role: "assistant"; content: string | null; tool_calls?: ToolCall[]; reasoning_content?: string }
-  | { role: "tool"; tool_call_id: string; content: string };
-export interface ToolDefinition {
-  type: "function";
-  function: { name: string; description: string; parameters: Record<string, unknown> };
-}
-export interface ModelRequest {
-  messages: Message[];
-  tools: ToolDefinition[];
-  thinking: "enabled" | "disabled";
-  maxTokens: number;
-}
-export interface ModelReply {
-  message: Extract<Message, { role: "assistant" }>;
-  finishReason: "stop" | "tool_calls" | "length";
-}
-export interface ChatModel {
-  complete(request: ModelRequest, signal: AbortSignal): Promise<ModelReply>;
-}
+export type { ToolCall, Message, ToolDefinition, ModelRequest, ModelReply, LanguageModel as ChatModel } from "../model/types.ts";
 export interface SearchHit {
   url: string;
   title: string;

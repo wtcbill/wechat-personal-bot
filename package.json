@@ -10,12 +10,14 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json",
-    "test": "vitest run && npm run test:chat",
-    "test:chat": "node --test tests/chat/*.node.ts",
+    "test": "vitest run",
+    "test:api": "node src/verify-api.ts",
+    "test:review-api": "node src/verify-review-api.ts",
     "chat:check": "node src/chat/cli.ts check",
     "chat": "node src/chat/cli.ts ask",
     "check": "npm run typecheck && npm test && npm run build",
     "config:check": "node --disable-warning=ExperimentalWarning src/main.ts check",
+    "api:check": "node src/main.ts api-check",
     "login": "node --disable-warning=ExperimentalWarning src/main.ts login",
     "start": "node --disable-warning=ExperimentalWarning src/main.ts start"
   },

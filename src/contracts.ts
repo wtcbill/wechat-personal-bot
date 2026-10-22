@@ -1,7 +1,7 @@
 /**
  * L3 — Channel-neutral text contracts.
  * Input/Output: owner identity, inbound text and opaque reply handles.
- * Pos: shared contracts for the current hello flow; see ./L2.md.
+ * Pos: shared application/channel contracts; see ./L2.md.
  * Effects/Dependencies: none; no protocol or model SDK dependencies.
  */
 export interface InboundText {
@@ -12,7 +12,8 @@ export interface InboundText {
 }
 
 export interface TextChannel {
-  receive(signal: AbortSignal): Promise<InboundText[]>;
+  // null ends a finite input stream; an empty batch keeps polling.
+  receive(signal: AbortSignal): Promise<InboundText[] | null>;
   sendReply(replyHandle: string, text: string, signal: AbortSignal): Promise<SendReceipt>;
   release(replyHandle: string): void;
   checkpoint(): Promise<void>;

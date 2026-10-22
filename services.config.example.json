@@ -1,0 +1,17 @@
+{
+  "apiKey": "",
+  "router": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "apiKeyEnv": "WEAVE_ROUTER_API_KEY",
+    "requestTimeoutMs": 15000,
+    "thinkingTimeoutMs": 60000
+  },
+  "chat": {
+    "provider": "deepseek",
+    "model": "deepseek-flash",
+    "apiKeyEnv": "WEAVE_CHAT_API_KEY",
+    "requestTimeoutMs": 25000,
+    "thinkingTimeoutMs": 60000
+  }
+}
