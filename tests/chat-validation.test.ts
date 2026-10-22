@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DeepSeekClient } from "../src/chat/deepseek.ts";
 import { Research } from "../src/chat/research.ts";
-import { outputProblems } from "../src/chat/service.ts";
+import { answerDecision, outputProblems } from "../src/chat/service.ts";
 import type { AnswerSource } from "../src/services.ts";
 
 const source: AnswerSource = {
@@ -34,7 +34,47 @@ describe("answer URL ownership", () => {
     expect(outputProblems("https://example.com/help?lang=zh#setup", [source], "auto"))
       .toContain("使用了外部资料却缺少来源ID引用");
     expect(outputProblems("尚未核实", [], "required").length).toBeGreaterThan(0);
-    expect(outputProblems("请提供需要查询的城市？", [], "required")).toEqual([]);
+    expect(outputProblems("请提供需要查询的城市？", [], "required", "clarify")).toEqual([]);
+  });
+});
+
+describe("structured clarifications", () => {
+  it.each([
+    "你在哪个城市？", "需要先确定地点。告诉我城市名称即可。", "城市名称", "Where are you located?", "Tell me the city.",
+  ])("accepts a clarification independent of phrasing: %s", answer => {
+    const parsed = answerDecision(JSON.stringify({ action: "clarify", answer }));
+    expect(parsed).toEqual({ action: "clarify", answer });
+    expect(outputProblems(answer, [], "required", "clarify")).toEqual([]);
+    expect(outputProblems(answer, [source], "required", "clarify")).toEqual([]);
+  });
+
+  it.each([
+    { action: "clarify", answer: "" }, { action: "clarify", answer: "   " },
+    { action: "clarify", answer: "问".repeat(301) }, { action: "clarify", answer: ["城市"] },
+    { action: "clarify", question: "城市？" }, { action: "clarify", answer: "城市？", extra: true },
+  ])("rejects malformed clarification %#", raw => {
+    expect(answerDecision(JSON.stringify(raw))).toBeNull();
+  });
+
+  it("preserves answer/supplement decisions and trims clarification whitespace", () => {
+    expect(answerDecision('{"action":"answer","answer":"回答"}')).toEqual({ action: "answer", answer: "回答" });
+    expect(answerDecision('{"action":"supplement","missing":"事实"}')).toEqual({ action: "supplement", missing: "事实" });
+    expect(answerDecision('{"action":"clarify","answer":"  城市？  "}')).toEqual({ action: "clarify", answer: "城市？" });
+    expect(answerDecision(JSON.stringify({ action: "clarify", answer: "问".repeat(300) }))?.action).toBe("clarify");
+  });
+
+  it("does not let question-like answers bypass required evidence or citation checks", () => {
+    expect(outputProblems("请提供需要查询的城市？", [], "required").length).toBeGreaterThan(0);
+    expect(outputProblems("Where are you located?", [], "required", "answer").length).toBeGreaterThan(0);
+    expect(outputProblems("查询结果", [source], "required", "answer")).toContain("使用了外部资料却缺少来源ID引用");
+    expect(outputProblems("结论 [S1]", [source], "required", "answer")).toEqual([]);
+  });
+
+  it("still validates source IDs, URLs and size on clarification decisions", () => {
+    expect(outputProblems("请确认 [S2]", [source], "required", "clarify")).toContain("引用了本轮没有取得资料的来源ID");
+    expect(outputProblems("请看 https://other.example/", [source], "required", "clarify"))
+      .toContain("链接不属于本轮已获取来源");
+    expect(outputProblems("问".repeat(301), [], "required", "clarify")).toContain("回答为空或过长");
   });
 });
 

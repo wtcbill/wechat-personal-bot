@@ -61,7 +61,9 @@ try {
     { name: "显式off包含搜索联网词", text: "搜索和联网是什么意思？用一句话说明。", network: "off", search: false },
     { name: "显式required及同页锚点", network: "required", search: true, anchor: "#enable-thinking",
       text: "请联网读取 DeepSeek 官方思考模式文档 https://api-docs.deepseek.com/guides/thinking_mode/ 原文。用一句话说明启用思考的参数，引用来源，并原样附上该页链接 https://api-docs.deepseek.com/guides/thinking_mode/#enable-thinking 。" },
-    { name: "required固定文案澄清通路", text: "请查询天气；未提供城市，请先原样问“请问你想查询哪个城市的天气？”，不要猜测城市。", network: "required", search: false, clarify: true },
+    { name: "required普通天气澄清", text: "请查询天气。", network: "required", search: false, clarify: true },
+    { name: "required不同中文表达澄清", text: "帮我查一下当地天气。", network: "required", search: false, clarify: true },
+    { name: "required英文天气澄清", text: "Check the weather, please.", network: "required", search: false, clarify: true },
   ];
   for (const test of cases) {
     console.log(`开始：${test.name}`);
@@ -95,7 +97,7 @@ try {
       assert.ok(value.answer.includes(test.anchor), "最终答案必须保留fragment");
       assert.ok(value.usage.fetches > 0 && value.sources.some(item => item.status === "read"));
     }
-    if (test.clarify) assert.match(value.answer, /[?？]$/);
+    if (test.clarify) assert.equal(observations.at(-1)?.action, "clarify", "必须通过结构化澄清决定作答");
     console.log(`通过：${test.name}`);
   }
 
@@ -125,7 +127,7 @@ try {
   const next = new Research(client, "继续", true, limits, () => `S${id++}`, research.sources());
   assert.ok(next.sources().length > 0 && next.sources().every(item => item.status === "unread" && item.retrievedAt === null));
   assert.deepEqual(next.evidence(), []);
-  console.log("通过：真实Research状态、缓存和跨轮初始化；7个真实模型样本通过。");
+  console.log(`通过：真实Research状态、缓存和跨轮初始化；${cases.length}个真实模型样本通过。`);
 } catch (error) {
   // Only assertion messages are ours; never log provider/config exception bodies.
   console.error(error instanceof assert.AssertionError ? `验收失败：${error.message}` : "真实验收未完成；检查前面的安全状态输出，密钥未输出。");
